@@ -1,0 +1,20 @@
+<svg width="240" height="72" viewBox="0 0 240 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="72" rx="22" fill="#050505"/>
+  <rect x="1" y="1" width="238" height="70" rx="21" stroke="url(#outline)" stroke-opacity="0.35"/>
+  <rect x="14" y="14" width="44" height="44" rx="15" fill="url(#panel)"/>
+  <path d="M27 47L36 23H39.4L49 47H43.7L41.8 42H33.9L32.1 47H27ZM35.5 38.1H40.2L37.8 31.2L35.5 38.1Z" fill="#F8FAFC"/>
+  <path d="M46.5 26.5L52.5 20.5" stroke="#22D3EE" stroke-width="3" stroke-linecap="round"/>
+  <path d="M21 51L27 45" stroke="#C026D3" stroke-width="3" stroke-linecap="round"/>
+  <text x="72" y="33" fill="#F8FAFC" font-family="'Segoe UI', Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="1.6">ALPHA</text>
+  <text x="72" y="54" fill="#A855F7" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="4.4">3D STUDIO</text>
+  <defs>
+    <linearGradient id="panel" x1="14" y1="14" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C026D3"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="outline" x1="18" y1="0" x2="210" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C026D3"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+</svg>

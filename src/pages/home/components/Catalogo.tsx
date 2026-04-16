@@ -76,7 +76,7 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
   };
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="space-y-5 p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-white">Catálogo de Produtos</h1>
@@ -84,14 +84,13 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
         </div>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer whitespace-nowrap"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#c026d3] to-[#7c3aed] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 sm:w-auto"
         >
           <i className="ri-add-line"></i> Novo Produto
         </button>
       </div>
 
-      {/* Category Filter */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex flex-wrap items-center gap-2">
         {(['Todos', ...CATEGORIAS] as const).map(c => (
           <button
             key={c}
@@ -105,10 +104,9 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
         ))}
       </div>
 
-      {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0f0f1a] border border-[#2d2d4e] rounded-2xl p-6 w-full max-w-lg space-y-4">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center">
+          <div className="max-h-[92vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-2xl border border-[#2d2d4e] bg-[#0f0f1a] p-5 sm:p-6">
             <div className="flex items-center justify-between">
               <h3 className="text-white font-semibold">{editId ? 'Editar Produto' : 'Novo Produto'}</h3>
               <button onClick={() => setShowForm(false)} className="w-7 h-7 flex items-center justify-center text-[#6b7280] hover:text-white cursor-pointer">
@@ -132,8 +130,8 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2">
                 <label className="text-[#6b7280] text-xs mb-1 block">Nome do Produto</label>
                 <input type="text" value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} placeholder="Ex: Suporte para celular" className="w-full bg-[#1a1a2e] border border-[#2d2d4e] text-white text-sm px-3 py-2 rounded-lg outline-none focus:border-[#7c3aed] placeholder-[#4b5563]" />
               </div>
@@ -147,22 +145,21 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
                   {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="text-[#6b7280] text-xs mb-1 block">Descrição</label>
                 <textarea value={form.descricao} onChange={e => setForm(f => ({ ...f, descricao: e.target.value }))} rows={3} placeholder="Descreva o produto..." className="w-full bg-[#1a1a2e] border border-[#2d2d4e] text-white text-sm px-3 py-2 rounded-lg outline-none focus:border-[#7c3aed] placeholder-[#4b5563] resize-none" />
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <button onClick={saveForm} className="flex-1 py-2.5 bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white rounded-lg text-sm font-medium cursor-pointer hover:opacity-90 whitespace-nowrap">Salvar Produto</button>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row">
               <button onClick={() => setShowForm(false)} className="px-4 py-2.5 bg-[#1a1a2e] border border-[#2d2d4e] text-[#9ca3af] rounded-lg text-sm cursor-pointer hover:text-white whitespace-nowrap">Cancelar</button>
+              <button onClick={saveForm} className="flex-1 py-2.5 bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white rounded-lg text-sm font-medium cursor-pointer hover:opacity-90 whitespace-nowrap">Salvar Produto</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {filtered.map(p => (
           <div key={p.id} className="bg-[#0f0f1a] border border-[#1e1e35] rounded-xl overflow-hidden hover:border-[#3d3d6e] transition-all duration-200 group">
             <div className="w-full h-48 overflow-hidden relative">
@@ -192,7 +189,7 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
                 <span className="text-[#c084fc] font-bold text-lg">R$ {p.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 <span className="text-[#4b5563] text-xs font-mono">{p.id}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <button
                   onClick={() => shareProduct(p)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-[#25d366]/10 border border-[#25d366]/30 text-[#25d366] rounded-lg text-xs font-medium hover:bg-[#25d366]/20 transition-colors cursor-pointer whitespace-nowrap"
@@ -201,7 +198,7 @@ export default function Catalogo({ produtos, onChange }: CatalogoProps) {
                 </button>
                 <button
                   onClick={() => copyLink(p)}
-                  className="w-9 h-9 flex items-center justify-center bg-[#1a1a2e] border border-[#2d2d4e] text-[#9ca3af] rounded-lg hover:text-white hover:border-[#7c3aed] transition-all cursor-pointer relative"
+                  className="h-9 w-full flex items-center justify-center bg-[#1a1a2e] border border-[#2d2d4e] text-[#9ca3af] rounded-lg hover:text-white hover:border-[#7c3aed] transition-all cursor-pointer relative sm:w-9"
                 >
                   {shareToast === p.id ? (
                     <i className="ri-check-line text-[#34d399] text-sm"></i>
