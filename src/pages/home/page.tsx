@@ -149,6 +149,57 @@ function normalizeProduto(produto: Partial<Produto> & { id: string }): Produto {
   };
 }
 
+function buildProdutosFromPedidos(pedidos: Pedido[], produtosExistentes: Produto[] = []): Produto[] {
+  const productMap = new Map<string, Produto>();
+  const highestExistingId = produtosExistentes.reduce((max, produto) => {
+    const numericId = Number.parseInt(produto.id.replace('PRD-', ''), 10);
+    return Number.isFinite(numericId) ? Math.max(max, numericId) : max;
+  }, 0);
+
+  produtosExistentes.forEach((produto) => {
+    if (!produto.nome.trim()) {
+      return;
+    }
+
+    productMap.set(produto.nome.trim().toLowerCase(), normalizeProduto(produto));
+  });
+
+  let nextId = highestExistingId + 1;
+
+  pedidos.forEach((pedido) => {
+    pedido.itens.forEach((item) => {
+      const nome = item.produto.trim();
+      if (!nome) {
+        return;
+      }
+
+      const key = nome.toLowerCase();
+      const precoUnitario = item.quantidade > 0 ? item.valorVenda / item.quantidade : item.valorVenda;
+      const produtoExistente = productMap.get(key);
+
+      if (produtoExistente) {
+        if (produtoExistente.preco <= 0 && precoUnitario > 0) {
+          productMap.set(key, { ...produtoExistente, preco: Number(precoUnitario.toFixed(2)) });
+        }
+
+        return;
+      }
+
+      productMap.set(key, {
+        id: `PRD-${String(nextId).padStart(3, '0')}`,
+        nome,
+        descricao: 'Produto gerado automaticamente a partir do historico de pedidos.',
+        preco: Number(precoUnitario.toFixed(2)) || 0,
+        imagem: '',
+        categoria: 'Outros',
+      });
+      nextId += 1;
+    });
+  });
+
+  return Array.from(productMap.values()).sort((left, right) => left.nome.localeCompare(right.nome, 'pt-BR'));
+}
+
 async function syncProdutosToSupabase(produtos: Produto[]) {
   if (!supabase) {
     return;
@@ -492,6 +543,28 @@ export default function Home() {
 
     void sync();
   }, [produtos]);
+
+  useEffect(() => {
+    if (!hasLoadedRemotePedidosRef.current || !hasLoadedRemoteProdutosRef.current) {
+      return;
+    }
+
+    if (isHydratingRemotePedidosRef.current || isHydratingRemoteProdutosRef.current) {
+      return;
+    }
+
+    if (produtos.length > 0 || pedidos.length === 0) {
+      return;
+    }
+
+    const produtosDerivados = buildProdutosFromPedidos(pedidos);
+    if (produtosDerivados.length === 0) {
+      return;
+    }
+
+    initialProdutosRef.current = produtosDerivados;
+    setProdutos(produtosDerivados);
+  }, [pedidos, produtos.length]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.produtos, JSON.stringify(produtos));
